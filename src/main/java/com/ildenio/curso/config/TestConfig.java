@@ -3,6 +3,7 @@ package com.ildenio.curso.config;
 import com.ildenio.curso.services.DBService;
 import com.ildenio.curso.services.EmailService;
 import com.ildenio.curso.services.MockEmailService;
+import com.ildenio.curso.services.SmtpEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,4 +27,5 @@ public class TestConfig {
     public EmailService emailService(){
         return new MockEmailService();
     }
+
 }
