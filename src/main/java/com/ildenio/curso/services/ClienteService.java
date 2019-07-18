@@ -1,4 +1,5 @@
 package com.ildenio.curso.services;
+import com.ildenio.curso.domain.enums.Perfil;
 import com.ildenio.curso.repositories.EnderecoRepository;
 import com.ildenio.curso.domain.Cidade;
 import com.ildenio.curso.domain.Cliente;
@@ -8,6 +9,8 @@ import com.ildenio.curso.dto.ClienteDTO;
 import com.ildenio.curso.dto.ClienteNewDTO;
 import com.ildenio.curso.repositories.CidadeRepository;
 import com.ildenio.curso.repositories.ClienteRepository;
+import com.ildenio.curso.security.UserSS;
+import com.ildenio.curso.services.exception.AuthorizationException;
 import com.ildenio.curso.services.exception.DataIntegrityExceptiion;
 import com.ildenio.curso.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,10 @@ public class ClienteService {
         return obj;
     }
     public Cliente find(Integer id) {
+        UserSS user = UserService.authenticated();
+        if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+            throw new AuthorizationException("Acesso negado");
+        }
         Optional<Cliente> obj = repo.findById(id);
         return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado! id: "+id+" ,Tipo: "+Cliente.class.getName()));
     }
