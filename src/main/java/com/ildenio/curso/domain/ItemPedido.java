@@ -1,6 +1,5 @@
 package com.ildenio.curso.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.EmbeddedId;
@@ -11,7 +10,7 @@ import java.util.Locale;
 import java.util.Objects;
 @Entity
 public class ItemPedido implements Serializable {
-    @JsonBackReference
+    @JsonIgnore
     @EmbeddedId
     private ItemPedidoPK id = new ItemPedidoPK();
     private Double desconto;

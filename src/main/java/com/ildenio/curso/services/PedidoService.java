@@ -1,5 +1,6 @@
 package com.ildenio.curso.services;
 
+import com.ildenio.curso.domain.Cliente;
 import com.ildenio.curso.domain.ItemPedido;
 import com.ildenio.curso.domain.PagamentoComBoleto;
 import com.ildenio.curso.domain.Pedido;
@@ -7,10 +8,15 @@ import com.ildenio.curso.domain.enums.EstadoPagamento;
 import com.ildenio.curso.repositories.ItemPedidoRepository;
 import com.ildenio.curso.repositories.PagamentoRepository;
 import com.ildenio.curso.repositories.PedidoRepository;
+import com.ildenio.curso.security.UserSS;
+import com.ildenio.curso.services.exception.AuthorizationException;
 import com.ildenio.curso.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort.Direction;
 
 import java.util.Date;
 import java.util.Optional;
@@ -61,6 +67,14 @@ public class PedidoService {
         //emailService.sendOrderConfirmationHtmlEmail(obj);
           return obj;
     }
-
+    public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        UserSS user = UserService.authenticated();
+        if(user == null){
+          throw new AuthorizationException("Acesso negado!");
+        }
+        PageRequest pageRequest = PageRequest.of(page,linesPerPage,Direction.valueOf(direction),orderBy);
+        Cliente cliente = clienteService.find(user.getId());
+        return repo.findByCliente(cliente,pageRequest);
     }
+}
 

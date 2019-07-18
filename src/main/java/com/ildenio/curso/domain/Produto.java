@@ -23,14 +23,7 @@ public class Produto implements Serializable {
     @JoinTable(name="PRODUTO_CATEGORIA", joinColumns = @JoinColumn(name="Produto_id"),
     inverseJoinColumns = @JoinColumn(name="Categoria_id"))
     private List<Categoria> categorias = new ArrayList<>();
-    @JsonIgnore
-    public List<Pedido> getpedidos(){
-        List<Pedido> lista = new ArrayList<>();
-        for(ItemPedido x :itens){
-            lista.add(x.getPedido());
-        }
-        return lista;
-    }
+
 
     public Produto(){}
 
@@ -39,6 +32,14 @@ public class Produto implements Serializable {
         this.nome = nome;
         this.preco = preco;
 
+    }
+    @JsonIgnore
+    public List<Pedido> getpedidos(){
+        List<Pedido> lista = new ArrayList<>();
+        for(ItemPedido x :itens){
+            lista.add(x.getPedido());
+        }
+        return lista;
     }
 
     public Set<ItemPedido> getItens() {
