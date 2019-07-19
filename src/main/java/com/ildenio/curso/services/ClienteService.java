@@ -1,14 +1,15 @@
 package com.ildenio.curso.services;
-import com.ildenio.curso.domain.enums.Perfil;
-import com.ildenio.curso.repositories.EnderecoRepository;
+
 import com.ildenio.curso.domain.Cidade;
 import com.ildenio.curso.domain.Cliente;
 import com.ildenio.curso.domain.Endereco;
+import com.ildenio.curso.domain.enums.Perfil;
 import com.ildenio.curso.domain.enums.TipoCliente;
 import com.ildenio.curso.dto.ClienteDTO;
 import com.ildenio.curso.dto.ClienteNewDTO;
 import com.ildenio.curso.repositories.CidadeRepository;
 import com.ildenio.curso.repositories.ClienteRepository;
+import com.ildenio.curso.repositories.EnderecoRepository;
 import com.ildenio.curso.security.UserSS;
 import com.ildenio.curso.services.exception.AuthorizationException;
 import com.ildenio.curso.services.exception.DataIntegrityExceptiion;
@@ -18,7 +19,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +42,7 @@ public class ClienteService {
     private BCryptPasswordEncoder pe;
     @Autowired
     private S3Service s3Service;
+
     @Transactional
     public Cliente insert(Cliente obj) {
         obj.setId(null);
@@ -101,7 +102,18 @@ public class ClienteService {
         newObj.setEmail(obj.getEmail());
     }
     public URI uploadProfilePicture(MultipartFile multipartFile) {
-        return s3Service.uploadFile(multipartFile);
+        UserSS user = UserService.authenticated();
+        if (user == null) {
+            throw new AuthorizationException("Acesso negado");
+        }
+
+        URI uri = s3Service.uploadFile(multipartFile);
+
+        Cliente cli = find(user.getId());
+        cli.setImageUrl(uri.toString());
+        repo.save(cli);
+
+        return uri;
     }
 
 }
