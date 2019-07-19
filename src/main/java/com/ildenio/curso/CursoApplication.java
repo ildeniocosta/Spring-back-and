@@ -19,7 +19,7 @@ public class CursoApplication implements CommandLineRunner {
     }
     @Override
     public void run(String... args)throws Exception{
-        s3Service.uploadFile("C:\\Users\\Predator\\Pictures\\Saved Pictures\\pena.jpg");
+
 
 
 
