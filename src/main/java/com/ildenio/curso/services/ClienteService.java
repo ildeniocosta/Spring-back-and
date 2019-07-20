@@ -12,7 +12,7 @@ import com.ildenio.curso.repositories.ClienteRepository;
 import com.ildenio.curso.repositories.EnderecoRepository;
 import com.ildenio.curso.security.UserSS;
 import com.ildenio.curso.services.exception.AuthorizationException;
-import com.ildenio.curso.services.exception.DataIntegrityExceptiion;
+import com.ildenio.curso.services.exception.DataIntegrityException;
 import com.ildenio.curso.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,7 +78,7 @@ public class ClienteService {
             repo.deleteById(id);
         }
         catch(DataIntegrityViolationException e){
-            throw new DataIntegrityExceptiion("Não é possível excluir um clieten porque há pedidos relacionadas");
+            throw new DataIntegrityException("Não é possível excluir um clieten porque há pedidos relacionadas");
         }
 
     }

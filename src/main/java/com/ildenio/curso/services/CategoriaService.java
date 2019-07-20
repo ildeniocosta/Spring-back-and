@@ -2,7 +2,7 @@ package com.ildenio.curso.services;
 
 import com.ildenio.curso.domain.Categoria;
 import com.ildenio.curso.repositories.CategoriaRepository;
-import com.ildenio.curso.services.exception.DataIntegrityExceptiion;
+import com.ildenio.curso.services.exception.DataIntegrityException;
 import com.ildenio.curso.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -42,7 +42,7 @@ public class CategoriaService {
         repo.deleteById(id);
     }
         catch(DataIntegrityViolationException e){
-            throw new DataIntegrityExceptiion("Não é possível excluir uma categoria que possui produtos");
+            throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos");
         }
 
     }
